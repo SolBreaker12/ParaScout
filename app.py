@@ -13,14 +13,14 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/scout/game')
-def game():
-    return render_template('scout/match_data.html')
+@app.route('/scout/match')
+def scout_match():
+    return render_template('scout/match_scout.html')
 
 
 @app.route('/scout/pit')
-def pit():
-    return render_template('scout/pit_data.html')
+def scout_pit():
+    return render_template('scout/pit_scout.html')
 
 
 @app.route('/view')

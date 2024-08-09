@@ -44,7 +44,3 @@ class Pit_Data(Base):
     drivetrain_type = Column(String, nullable=False)
     mechanisms = Column(ARRAY(String), nullable=False)
     auto_num = Column(Integer, nullable=False)
-
-
-
-

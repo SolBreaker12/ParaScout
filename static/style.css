@@ -1,4 +1,90 @@
 * {
-    background-color: #111111;
-    color: azure;
+    outline: 1px red;
+}
+
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: #000000;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #ffff00;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+h2 {
+    margin: 0;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.button {
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 2em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.button:hover {
+    background-color: #ffff00;
+    color: #000000;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #000000;
+    border-top: 2px solid #ffff00;
+}
+
+@media (max-width: 600px) {
+    .buttons {
+        gap: 10px;
+    }
+
+    .button {
+        padding: 10px 20px;
+        font-size: 2em;
+    }
 }
