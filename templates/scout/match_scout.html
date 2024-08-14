@@ -12,7 +12,7 @@
     </header>
     <div class="container">
         <h2>Match Scouting</h2>
-        <form action="/scout/submit_match_data" method="post">
+        <form class="scout-form" action="/scout/submit_match_data" method="post">
             <div class="form-group">
                 <label for="match-id">Match Number:</label>
                 <input type="number" id="match-id" name="match_id" required>
@@ -33,7 +33,7 @@
                 <label for="score">Score:</label>
                 <input type="number" id="score" name="score" required>
             </div>
-            <button type="submit">Submit</button>
+            <button class="button" type="submit">Submit</button>
         </form>
     </div>
     <footer>
