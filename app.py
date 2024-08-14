@@ -58,13 +58,15 @@ def submit_match_data():
     db.session.commit()
     return redirect(url_for('success'))
 
-@app.route('/success')
-def success():
-    return render_template('scout/success.html')
 
 @app.route('/scout/pit')
 def scout_pit():
     return render_template('scout/pit_scout.html')
+
+
+@app.route('/success')
+def success():
+    return render_template('scout/success.html')
 
 
 @app.route('/view')
@@ -73,9 +75,16 @@ def view():
 
 
 @app.route('/view/events')
-def view_event():
-    events = Events.query()
-    return render_template('view/event.html', events=events)
+def view_events():
+    events = Events.query.all()
+    return render_template('view/events.html', events=events)
+
+
+@app.route('/view/events/<event_id>')
+def view_event_teams(event_id):
+    event = Events.query.filter_by(event_id=event_id).one()
+    event_teams = EventTeams.query.filter_by(event_id=event_id).all()
+    return render_template('view/events/event.html', event=event, event_teams=event_teams)
 
 
 @app.route('/view/matches')
@@ -84,10 +93,8 @@ def view_matches():
     return render_template('view/matches.html', matches=matches)
 
 
-
 with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)
-
