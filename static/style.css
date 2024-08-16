@@ -92,7 +92,7 @@ tr:nth-child(even) {
 
 footer {
     text-align: center;
-    padding: 20px;
+    padding: 10px;
     background-color: #000000;
     border-top: 2px solid #ffff00;
 }
@@ -125,6 +125,17 @@ footer {
     color: #ffffff;
 }
 
+.add-event-section {
+    margin-bottom: 40px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.events-section {
+    width: 100%;
+    max-width: 800px;
+}
+
 @media (max-width: 600px) {
     .buttons {
         gap: 10px;
@@ -138,4 +149,75 @@ footer {
     .scout-form {
         gap: 15px;
     }
+}
+
+.delete-button {
+    background-color: #ff4136;
+    padding: 5px 10px;
+    font-size: 0.9em;
+}
+
+.delete-button:hover {
+    background-color: #ff7b6e;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #333333;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 5px;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.modal-content .button {
+    margin-right: 10px;
+}
+
+#confirmDelete {
+    background-color: #ff4136;
+}
+
+#confirmDelete:hover {
+    background-color: #ff7b6e;
+}
+
+#cancelDelete {
+    background-color: #333333;
+}
+
+#cancelDelete:hover {
+    background-color: #4a4a4a;
+}
+
+.match-number-container {
+    display: flex;
+
+}
+
+.match-number-container select {
+    flex: 1;
+    max-width: 33.33%;
+    margin-right: 10px;
+}
+
+.match-number-container input {
+    flex: 2;
 }

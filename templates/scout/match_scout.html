@@ -7,37 +7,47 @@
     <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-    <header>
-        <h1>ParaScout</h1>
-    </header>
-    <div class="container">
-        <h2>Match Scouting</h2>
-        <form class="scout-form" action="/scout/submit_match_data" method="post">
-            <div class="form-group">
-                <label for="match-id">Match Number:</label>
-                <input type="number" id="match-id" name="match_id" required>
-            </div>
-            <div class="form-group">
-                <label for="team-id">Team Number:</label>
-                <input type="number" id="team-id" name="team_id" required>
-            </div>
-            <div class="form-group">
-                <label for="event-id">Event Name:</label>
-                <select id="event-id" name="event_id" required>
-                    <option value="">Select an event</option>
-                    <option value="2024cabe">East Bay</option>
-                    <option value="2024tuhc">Halic</option>
+<header>
+    <h1>ParaScout</h1>
+</header>
+<div class="container">
+    <h2>Match Scouting</h2>
+    <form class="scout-form" action="/scout/submit_match_data" method="post">
+        <div class="form-group">
+            <label for="match-id">Match Number:</label>
+            <div class="match-number-container">
+                <label for="match_type"></label>
+                <select id="match_type" name="match_type" required>
+                    <option value="qm">Qual</option>
+                    <option value="sf">Semi</option>
+                    <option value="f">Final</option>
                 </select>
+                <label for="match_number"></label>
+                <input type="number" id="match_number" name="match_number" required>
             </div>
-            <div class="form-group">
-                <label for="score">Score:</label>
-                <input type="number" id="score" name="score" required>
-            </div>
-            <button class="button" type="submit">Submit</button>
-        </form>
-    </div>
-    <footer>
-        <p>© 2024 FRC Team 9609 Paraducks</p>
-    </footer>
+        </div>
+        <div class="form-group">
+            <label for="team-id">Team Number:</label>
+            <input type="number" id="team-id" name="team_id" required>
+        </div>
+        <div class="form-group">
+            <label for="event-id">Event Name:</label>
+            <select id="event-id" name="event_id" required>
+                <option value="">Select an event</option>
+                {% for event in events %}
+                    <option value="{{ event.event_id }}">{{ event.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="score">Score:</label>
+            <input type="number" id="score" name="score" required>
+        </div>
+        <button class="button" type="submit">Submit</button>
+    </form>
+</div>
+<footer>
+    <p>© 2024 FRC Team 9609 Paraducks</p>
+</footer>
 </body>
 </html>
