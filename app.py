@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -35,23 +35,29 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-
 @app.route('/scout/match')
 def scout_match():
-    return render_template('scout/match_scout.html')
+    events = Events.query.all()
+    return render_template('scout/match_scout.html', events=events)
 
 
 @app.route('/scout/submit_match_data', methods=['POST'])
 def submit_match_data():
+    team_id = request.form['team_id']
+    event_id = request.form['event_id']
+    match_type = request.form['match_type']
+    match_number = request.form['match_number']
+    score = request.form['score']
+
+    # Combine match_type and match_number to create match_id
+    match_id = f"{match_type}{match_number}"
+
+    # Create a new Matches entry
     match = Matches(
-        team_id=request.form['team_id'],
-        event_id=request.form['event_id'],
-        match_id=request.form['match_id'],
-        score=request.form['score']
+        team_id=team_id,
+        event_id=event_id,
+        match_id=match_id,
+        score=score
     )
 
     db.session.add(match)
@@ -91,6 +97,39 @@ def view_event_teams(event_id):
 def view_matches():
     matches = Matches.query.all()
     return render_template('view/matches.html', matches=matches)
+
+
+@app.route('/admin')
+def admin():
+    events = Events.query.all()
+    return render_template('admin.html', events=events)
+
+
+@app.route('/admin/add_event', methods=['POST'])
+def add_event():
+    event_name = request.form['event_name']
+    event_id = request.form['event_id']
+    new_event = Events(event_id=event_id, name=event_name)
+    db.session.add(new_event)
+    db.session.commit()
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/delete_event/<string:event_id>', methods=['POST'])
+def delete_event(event_id):
+    event = Events.query.get_or_404(event_id)
+
+    # Delete related EventTeams entries
+    EventTeams.query.filter_by(event_id=event_id).delete()
+
+    # Delete related Matches entries
+    Matches.query.filter_by(event_id=event_id).delete()
+
+    # Delete the event
+    db.session.delete(event)
+    db.session.commit()
+
+    return jsonify({"success": True})
 
 
 with app.app_context():
