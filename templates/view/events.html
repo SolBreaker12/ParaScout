@@ -3,23 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <title>FRC Team Search</title>
 </head>
 <body>
-<header>
-    <h1>ParaScout</h1>
-</header>
-<div class="container">
-    <h2>Events</h2>
+    <div class="container">
+        <h1>FRC Team Search</h1>
+        <input type="text" id="searchInput" placeholder="Search for teams...">
+        <div id="teamList"></div>
+    </div>
 
-    {% for event in events %}
-        <a href="view/events/{{ event.event_id }}" class="button">{{ event.name }}</a>
-    {% endfor %}
-</div>
-<footer>
-    <p>© 2024 FRC Team 9609 Paraducks</p>
-</footer>
+    <script>
+        // Parse the JSON data passed from the server
+        const eventTeams = JSON.parse('{{ event_teams | safe }}');
+
+        const searchInput = document.getElementById('searchInput');
+        const teamList = document.getElementById('teamList');
+
+        function renderTeams(filteredTeams) {
+            teamList.innerHTML = '';
+            filteredTeams.forEach(team => {
+                const teamCard = document.createElement('div');
+                teamCard.classList.add('team-card');
+                teamCard.innerHTML = `
+                    <h3>${team.name}</h3>
+                    <p>Team ID: ${team.team_id}</p>
+                `;
+                teamList.appendChild(teamCard);
+            });
+        }
+
+        function filterTeams(teams, query) {
+            return teams.filter(team =>
+                team.name.toLowerCase().includes(query.toLowerCase()) ||
+                team.team_id.toString().includes(query)
+            );
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            const filteredTeams = filterTeams(eventTeams, query);
+            renderTeams(filteredTeams);
+        });
+
+        // Initial render of all teams
+        renderTeams(eventTeams);
+    </script>
 </body>
 </html>
-

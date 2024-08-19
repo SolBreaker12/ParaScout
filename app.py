@@ -119,13 +119,10 @@ def add_event():
 def delete_event(event_id):
     event = Events.query.get_or_404(event_id)
 
-    # Delete related EventTeams entries
     EventTeams.query.filter_by(event_id=event_id).delete()
 
-    # Delete related Matches entries
     Matches.query.filter_by(event_id=event_id).delete()
 
-    # Delete the event
     db.session.delete(event)
     db.session.commit()
 
