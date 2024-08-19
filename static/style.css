@@ -8,6 +8,8 @@ body {
     font-family: Arial, sans-serif;
     background-color: #1a1a1a;
     color: #ffffff;
+    margin: 0;
+    padding: 20px;
     display: flex;
     flex-direction: column;
 }
@@ -20,6 +22,8 @@ body {
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 header {
@@ -32,6 +36,8 @@ header {
 h1 {
     margin: 0;
     font-size: 2.5em;
+    text-align: center;
+    color: #ffff00;
 }
 
 h2 {
@@ -149,6 +155,10 @@ footer {
     .scout-form {
         gap: 15px;
     }
+
+    #teamList {
+        justify-content: space-between;
+    }
 }
 
 .delete-button {
@@ -220,4 +230,35 @@ footer {
 
 .match-number-container input {
     flex: 2;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #ffff00;
+}
+
+#teamList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.team-card {
+    background-color: #333333;
+    border: 1px solid #ffff00;
+    padding: 10px;
+    border-radius: 5px;
+    width: 200px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.team-card:hover {
+    background-color: #4a4a4a;
 }
