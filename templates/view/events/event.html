@@ -8,12 +8,28 @@
 </head>
 <body>
 <header>
-    <h1>{{ event.name }} Event</h1>
+    <h1>ParaScout</h1>
 </header>
 <div class="container">
-    <h2>Teams</h2>
+    <h2>Events</h2>
 
-    this is the {{ event.name }} event
+    <table>
+        <thead>
+        <tr>
+            <th>Team Number</th>
+            <th>Team Name</th>
+            <th>Avg Score</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for team in teams %}
+            <tr>
+                <td>{{ team.team_id }}</td>
+                <td>{{ team.name }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 </div>
 <footer>
     <p>© 2024 FRC Team 9609 Paraducks</p>
