@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
+import TBA as tba
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scouting_data.db'
@@ -87,10 +88,22 @@ def view_events():
 
 
 @app.route('/view/events/<event_id>')
-def view_event_teams(event_id):
+def view_event(event_id):
     event = Events.query.filter_by(event_id=event_id).one()
     event_teams = EventTeams.query.filter_by(event_id=event_id).all()
-    return render_template('view/events/event.html', event=event, event_teams=event_teams)
+
+    team_ids = [et.team_id for et in event_teams]
+
+    teams = Teams.query.filter(Teams.team_id.in_(team_ids)).all()
+
+    return render_template('view/events/event.html', event=event, teams=teams)
+
+
+@app.route('/view/events/<event_id>/<team_id>')
+def view_event_team(event_id, team_id):
+    matches = Matches.query.filter_by(event_id=event_id, team_id=team_id).all()
+
+    return render_template('view/events/team.html', matches=matches)
 
 
 @app.route('/view/matches')
@@ -112,6 +125,16 @@ def add_event():
     new_event = Events(event_id=event_id, name=event_name)
     db.session.add(new_event)
     db.session.commit()
+
+    teams = tba.request_event_teams(event_id)
+    for team in teams:
+        team_id = team["team_number"]
+        team_name = team["nickname"]
+        new_team = Teams(team_id=team_id, name=team_name)
+        new_event_team = EventTeams(event_id=event_id, team_id=team_id)
+        db.session.add(new_team)
+        db.session.add(new_event_team)
+    db.session.commit()
     return redirect(url_for('admin'))
 
 
@@ -120,8 +143,6 @@ def delete_event(event_id):
     event = Events.query.get_or_404(event_id)
 
     EventTeams.query.filter_by(event_id=event_id).delete()
-
-    Matches.query.filter_by(event_id=event_id).delete()
 
     db.session.delete(event)
     db.session.commit()
