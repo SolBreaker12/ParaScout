@@ -13,9 +13,11 @@
 <div class="container">
     <h2>Events</h2>
 
+    <div class="buttons">
     {% for event in events %}
         <a href="events/{{ event.event_id }}" class="button">{{ event.name }}</a>
     {% endfor %}
+    </div>
 </div>
 <footer>
     <p>© 2024 FRC Team 9609 Paraducks</p>

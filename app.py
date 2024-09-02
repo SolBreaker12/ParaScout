@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
-import TBA as tba
+import TBA
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scouting_data.db'
@@ -71,14 +71,9 @@ def scout_pit():
     return render_template('scout/pit_scout.html')
 
 
-@app.route('/success')
+@app.route('/scout/success')
 def success():
     return render_template('scout/success.html')
-
-
-@app.route('/view')
-def view():
-    return render_template('view.html')
 
 
 @app.route('/view/events')
@@ -96,7 +91,9 @@ def view_event(event_id):
 
     teams = Teams.query.filter(Teams.team_id.in_(team_ids)).all()
 
-    return render_template('view/events/event.html', event=event, teams=teams)
+    matches = Matches.query.filter_by(event_id=event_id).all()
+
+    return render_template('view/events/event.html', event=event, teams=teams, matches=matches)
 
 
 @app.route('/view/events/<event_id>/<team_id>')
@@ -126,14 +123,18 @@ def add_event():
     db.session.add(new_event)
     db.session.commit()
 
-    teams = tba.request_event_teams(event_id)
+    teams = TBA.request_event_teams(event_id)
     for team in teams:
         team_id = team["team_number"]
-        team_name = team["nickname"]
-        new_team = Teams(team_id=team_id, name=team_name)
+        existing_team = Teams.query.filter_by(team_id=team_id).first()
+        if not existing_team:
+            team_name = team["nickname"]
+            new_team = Teams(team_id=team_id, name=team_name)
+            db.session.add(new_team)
+
         new_event_team = EventTeams(event_id=event_id, team_id=team_id)
-        db.session.add(new_team)
         db.session.add(new_event_team)
+
     db.session.commit()
     return redirect(url_for('admin'))
 
@@ -143,6 +144,7 @@ def delete_event(event_id):
     event = Events.query.get_or_404(event_id)
 
     EventTeams.query.filter_by(event_id=event_id).delete()
+    Matches.query.filter_by(event_id=event_id).delete()
 
     db.session.delete(event)
     db.session.commit()

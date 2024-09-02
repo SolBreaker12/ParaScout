@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events</title>
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../../../static/style.css">
+    <script src="/sorttable.js"></script>
 </head>
 <body>
 <header>
     <h1>ParaScout</h1>
 </header>
 <div class="container">
-    <h2>Events</h2>
+    <h2>{{ event.name }} Event</h2>
 
-    <table>
+    <table class="sortable">
         <thead>
         <tr>
             <th>Team Number</th>
@@ -26,7 +27,25 @@
         {% for team in teams %}
             <tr>
                 <td>{{ team.team_id }}</td>
-                <td>{{ team.name }}</td>
+                <td>
+                    <a href="{{ event.event_id }}/{{ team.team_id }}">{{ team.name }}</a>
+                </td>
+                <td class="t-center">
+                    {% set sum = 0 %}
+                    {% set match_num = 0 %}
+                    {% for match in matches %}
+                        {% if match.team_id == team.team_id %}
+                            {% set sum = sum + match.score %}
+                            {% set match_num = match_num + 1 %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% set avg = 0 %}
+                    {% if match_num > 0 %}
+                        {% set avg = sum / match_num %}
+                    {% endif %}
+                    {{ avg }}
+                </td>
             </tr>
         {% endfor %}
     </table>
@@ -35,4 +54,10 @@
     <p>© 2024 FRC Team 9609 Paraducks</p>
 </footer>
 </body>
+<script>
+    function debug(text) {
+        console.log(text);
+    }
+</script>
 </html>
+
