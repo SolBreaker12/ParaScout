@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import TBA
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scouting_data.db'
 db = SQLAlchemy(app)
@@ -28,7 +29,10 @@ class Matches(db.Model):
     team_id = db.Column(db.Integer, db.ForeignKey('teams.team_id'), nullable=False)
     event_id = db.Column(db.String, db.ForeignKey('events.event_id'), nullable=False)
     match_id = db.Column(db.String, nullable=False)
-    score = db.Column(db.Integer, nullable=False)
+    auto_pieces = db.Column(db.Integer, nullable=False)
+    teleop_pieces = db.Column(db.Integer, nullable=False)
+    defense = db.Column(db.Boolean, nullable=False)
+    # score = db.Column(db.Integer, nullable=False)
 
 
 @app.route('/')
@@ -48,7 +52,9 @@ def submit_match_data():
     event_id = request.form['event_id']
     match_type = request.form['match_type']
     match_number = request.form['match_number']
-    score = request.form['score']
+    teleop_pieces = request.form['teleop_pieces']
+    auto_pieces = request.form['auto_pieces']
+    defense = 'defense' in request.form
 
     # Combine match_type and match_number to create match_id
     match_id = f"{match_type}{match_number}"
@@ -58,7 +64,9 @@ def submit_match_data():
         team_id=team_id,
         event_id=event_id,
         match_id=match_id,
-        score=score
+        teleop_pieces=teleop_pieces,
+        auto_pieces=auto_pieces,
+        defense=defense
     )
 
     db.session.add(match)

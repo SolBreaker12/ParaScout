@@ -86,6 +86,19 @@ tr:nth-child(even) {
     background-color: #2a2a2a;
 }
 
+input[type='checkbox'] {
+    -webkit-appearance:none;
+    width:30px;
+    height:30px;
+    background:#000000;
+    border-radius:5px;
+    border:2px solid #555;
+}
+
+input[type='checkbox']:checked {
+    background: #ffff00;
+}
+
 .buttons {
     display: flex;
     flex-direction: column;

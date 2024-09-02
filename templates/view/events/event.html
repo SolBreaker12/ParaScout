@@ -19,7 +19,8 @@
         <tr>
             <th>Team Number</th>
             <th>Team Name</th>
-            <th>Avg Score</th>
+            <th>Avg Auto</th>
+            <th>Avg Teleop</th>
         </tr>
         </thead>
 
@@ -30,12 +31,32 @@
                 <td>
                     <a href="{{ event.event_id }}/{{ team.team_id }}">{{ team.name }}</a>
                 </td>
+
+                <!-- Auto Pieces Avg -->
                 <td class="t-center">
                     {% set sum = 0 %}
                     {% set match_num = 0 %}
                     {% for match in matches %}
                         {% if match.team_id == team.team_id %}
-                            {% set sum = sum + match.score %}
+                            {% set sum = sum + match.auto_pieces %}
+                            {% set match_num = match_num + 1 %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% set avg = 0 %}
+                    {% if match_num > 0 %}
+                        {% set avg = sum / match_num %}
+                    {% endif %}
+                    {{ avg }}
+                </td>
+
+                <!-- Teleop Pieces Avg -->
+                <td class="t-center">
+                    {% set sum = 0 %}
+                    {% set match_num = 0 %}
+                    {% for match in matches %}
+                        {% if match.team_id == team.team_id %}
+                            {% set sum = sum + match.teleop_pieces %}
                             {% set match_num = match_num + 1 %}
                         {% endif %}
                     {% endfor %}
