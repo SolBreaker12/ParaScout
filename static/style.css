@@ -8,22 +8,25 @@ body {
     font-family: Arial, sans-serif;
     background-color: #1a1a1a;
     color: #ffffff;
-    margin: 0;
-    padding: 20px;
     display: flex;
     flex-direction: column;
+}
+
+.flex-start {
+    justify-content: flex-start;
+}
+
+.flex-center {
+    justify-content: center;
 }
 
 .container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
-    max-width: 800px;
-    margin: 0 auto;
 }
 
 header {
@@ -36,13 +39,11 @@ header {
 h1 {
     margin: 0;
     font-size: 2.5em;
-    text-align: center;
-    color: #ffff00;
 }
 
 h2 {
     margin: 0 0 20px 0;
-    font-size: 1.5em;
+    font-size: 2em;
     text-align: center;
 }
 
@@ -55,14 +56,30 @@ table {
 }
 
 th, td {
+    color: white;
     padding: 12px;
     text-align: left;
+    max-width: 10%;
+    text-wrap: normal;
     border-bottom: 1px solid #ffff00;
+}
+
+a {
+    color: white;
+}
+
+.t-center {
+    text-align: center;
+}
+
+.t-left {
+    text-align: left;
 }
 
 th {
     background-color: #000000;
     color: #ffff00;
+    text-align: center;
 }
 
 tr:nth-child(even) {
@@ -76,19 +93,25 @@ tr:nth-child(even) {
     max-width: 400px;
     width: 100%;
     margin: 0 auto;
+    align-items: center;
 }
 
 .button {
     background-color: #333333;
     color: #ffffff;
     border: none;
+    width: 60%;
     padding: 15px 30px;
-    font-size: 1.2em;
+    font-size: 1.5em;
     cursor: pointer;
     transition: background-color 0.3s;
     border-radius: 5px;
     text-decoration: none;
     text-align: center;
+}
+
+.button-100 {
+    width: 100%;
 }
 
 .button:hover {
