@@ -2,83 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events</title>
+    <title>{{ event.name }} - Teams</title>
     <link rel="stylesheet" href="../../../static/style.css">
-    <script src="/sorttable.js"></script>
 </head>
 <body>
 <header>
-    <h1>ParaScout</h1>
+    <h1>{{ event.name }} Event</h1>
 </header>
 <div class="container">
-    <h2>{{ event.name }} Event</h2>
-
+    <h2>Teams</h2>
     <table class="sortable">
         <thead>
         <tr>
-            <th>Team Number</th>
+            <th>Team ID</th>
             <th>Team Name</th>
-            <th>Avg Auto</th>
-            <th>Avg Teleop</th>
+            <th>Average Auto Points</th>
+            <th>Average Teleop Points</th>
         </tr>
         </thead>
-
         <tbody>
-        {% for team in teams %}
-            <tr>
-                <td>{{ team.team_id }}</td>
-                <td>
-                    <a href="{{ event.event_id }}/{{ team.team_id }}">{{ team.name }}</a>
-                </td>
-
-                <!-- Auto Pieces Avg -->
-                <td class="t-center">
-                    {% set sum = 0 %}
-                    {% set match_num = 0 %}
-                    {% for match in matches %}
-                        {% if match.team_id == team.team_id %}
-                            {% set sum = sum + match.auto_pieces %}
-                            {% set match_num = match_num + 1 %}
-                        {% endif %}
-                    {% endfor %}
-
-                    {% set avg = 0 %}
-                    {% if match_num > 0 %}
-                        {% set avg = sum / match_num %}
-                    {% endif %}
-                    {{ avg }}
-                </td>
-
-                <!-- Teleop Pieces Avg -->
-                <td class="t-center">
-                    {% set sum = 0 %}
-                    {% set match_num = 0 %}
-                    {% for match in matches %}
-                        {% if match.team_id == team.team_id %}
-                            {% set sum = sum + match.teleop_pieces %}
-                            {% set match_num = match_num + 1 %}
-                        {% endif %}
-                    {% endfor %}
-
-                    {% set avg = 0 %}
-                    {% if match_num > 0 %}
-                        {% set avg = sum / match_num %}
-                    {% endif %}
-                    {{ avg }}
-                </td>
-            </tr>
+        {% for stats in team_stats %}
+        <tr>
+            <td>{{ stats.team.team_id }}</td>
+            <td><a href="{{ event.event_id }}/{{ stats.team.team_id }}">{{ stats.team.name }}</a></td>
+            <td>{{ stats.average_auto_points }}</td>
+            <td>{{ stats.average_teleop_points }}</td>
+        </tr>
         {% endfor %}
+        </tbody>
     </table>
 </div>
 <footer>
     <p>© 2024 FRC Team 9609 Paraducks</p>
 </footer>
 </body>
-<script>
-    function debug(text) {
-        console.log(text);
-    }
-</script>
 </html>
-

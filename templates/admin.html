@@ -8,7 +8,7 @@
 </head>
 <body>
 <header>
-    <h1>FRC Scouting Admin</h1>
+    <h1>ParaScout</h1>
 </header>
 <div class="container">
     <div class="add-event-section">
@@ -42,7 +42,8 @@
                     <td>{{ event.event_id }}</td>
                     <td>{{ event.name }}</td>
                     <td>
-                        <button class="button delete-button button-100" onclick="confirmDelete('{{ event.event_id }}')">Delete
+                        <button class="button delete-button button-100" onclick="confirmDelete('{{ event.event_id }}')">
+                            Delete
                         </button>
                     </td>
                 </tr>
@@ -51,10 +52,9 @@
         </table>
     </div>
 </div>
-<footer>
-    <p>© 2024 FRC Team 9609 Paraducks</p>
-</footer>
-
+<div class="buttons">
+    <a href="/" class="button">Return</a>
+</div>
 <div id="confirmModal" class="modal">
     <div class="modal-content">
         <h2>Confirm Deletion</h2>
@@ -66,6 +66,10 @@
         </div>
     </div>
 </div>
+
+<footer>
+    <p>© 2024 FRC Team 9609 Paraducks</p>
+</footer>
 
 <script>
     const modal = document.getElementById('confirmModal');
