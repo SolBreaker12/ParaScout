@@ -12,7 +12,8 @@
 </header>
 <div class="container">
     <h2>Match Scouting</h2>
-    <form class="scout-form" action="/scout/submit_match_data" method="post">
+    <form class="scout-form" action="{{ url_for('submit_match_data') }}" method="POST">
+        <!-- Existing fields -->
         <div class="form-group">
             <label for="match-id">Match Number:</label>
             <div class="match-number-container">
@@ -27,8 +28,8 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="team-id">Team Number:</label>
-            <input type="number" id="team-id" name="team_id" required>
+            <label for="team_id">Team ID:</label>
+            <input type="text" id="team_id" name="team_id" required>
         </div>
         <div class="form-group">
             <label for="event-id">Event Name:</label>
@@ -40,18 +41,50 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="auto_pieces">Auto Pieces:</label>
-            <input type="number" id="auto_pieces" name="auto_pieces" required>
-        </div>
-        <div class="form-group">
             <label for="teleop_pieces">Teleop Pieces:</label>
             <input type="number" id="teleop_pieces" name="teleop_pieces" required>
         </div>
         <div class="form-group">
-            <label for="defense">Played Defense:</label>
+            <label for="auto_pieces">Auto Pieces:</label>
+            <input type="number" id="auto_pieces" name="auto_pieces" required>
+        </div>
+        <div class="form-group">
+            <label for="defense">Defense:</label>
             <input type="checkbox" id="defense" name="defense">
         </div>
-        <button class="button buttons" type="submit">Submit</button>
+        <div class="form-group">
+            <label for="auto_start_position">Auto Start Position:</label>
+            <select id="auto_start_position" name="auto_start_position" required>
+                <option value="Source">Source Side</option>
+                <option value="Speaker">Speaker</option>
+                <option value="Amp">Amp Side</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="auto_successful">Auto Successful:</label>
+            <select id="auto_successful" name="auto_successful" required>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="auto_target_pieces">Auto Target Pieces:</label>
+            <input type="number" id="auto_target_pieces" name="auto_target_pieces" required>
+        </div>
+        <div class="form-group">
+            <label for="endgame">Endgame:</label>
+            <select id="endgame" name="endgame" required>
+                <option value="None">None</option>
+                <option value="Park">Park</option>
+                <option value="Climb">Climb</option>
+                <option value="Trap">Trap</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="driver_ability">Driver Ability (1-10):</label>
+            <input type="number" id="driver_ability" name="driver_ability" min="1" max="10" required>
+        </div>
+            <button class="buttons button" type="submit">Submit</button>
     </form>
 </div>
 <footer>

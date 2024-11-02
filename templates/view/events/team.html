@@ -2,23 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRC Team Page</title>
+    <title>{{ team.name }} - Matches</title>
     <link rel="stylesheet" href="../../../static/style.css">
 </head>
 <body>
 <header>
-    <h1>FRC Team Page</h1>
+    <h1>Team {{ team.team_id }} - {{ team.name }}</h1>
 </header>
-
 <div class="container">
-    <h2>Team Matches</h2>
-    <table>
+    <div class="info-container">
+        <div class="info-left">
+            <p>Preferred Auto Starting Position: {{ preferred_auto_start_position }}</p>
+            <p>Average Teleop Points: {{ average_teleop_points }}</p>
+            <p>Average Auto Points: {{ average_auto_points }}</p>
+        </div>
+        <div class="info-right">
+            <!-- Placeholder for other information -->
+            <p>Other Info: TBD</p>
+        </div>
+    </div>
+    <h2>Matches</h2>
+    <table class="sortable">
         <thead>
         <tr>
-            <th>Match Number</th>
+            <th>Match ID</th>
             <th>Auto Pieces</th>
             <th>Teleop Pieces</th>
+            <th>Defense</th>
+            <th>Auto Start Position</th>
+            <th>Auto Successful</th>
+            <th>Auto Target Pieces</th>
+            <th>Endgame</th>
+            <th>Driver Ability</th>
         </tr>
         </thead>
         <tbody>
@@ -27,12 +42,17 @@
                 <td>{{ match.match_id }}</td>
                 <td>{{ match.auto_pieces }}</td>
                 <td>{{ match.teleop_pieces }}</td>
+                <td>{{ 'Yes' if match.defense else 'No' }}</td>
+                <td>{{ match.auto_start_position }}</td>
+                <td>{{ match.auto_target_pieces }}</td>
+                <td>{{ 'Yes' if match.auto_successful else 'No' }}</td>
+                <td>{{ match.endgame }}</td>
+                <td>{{ match.driver_ability }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
-
 <footer>
     <p>© 2024 FRC Team 9609 Paraducks</p>
 </footer>
