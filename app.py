@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import TBA
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scouting_data.db'
 db = SQLAlchemy(app)
@@ -32,7 +31,11 @@ class Matches(db.Model):
     auto_pieces = db.Column(db.Integer, nullable=False)
     teleop_pieces = db.Column(db.Integer, nullable=False)
     defense = db.Column(db.Boolean, nullable=False)
-    # score = db.Column(db.Integer, nullable=False)
+    auto_start_position = db.Column(db.String, nullable=False)
+    auto_successful = db.Column(db.Boolean, nullable=False)  # Renamed field
+    auto_target_pieces = db.Column(db.Integer, nullable=False)  # New field
+    endgame = db.Column(db.String, nullable=False)  # New field
+    driver_ability = db.Column(db.Integer, nullable=False)  # New field
 
 
 @app.route('/')
@@ -55,18 +58,26 @@ def submit_match_data():
     teleop_pieces = request.form['teleop_pieces']
     auto_pieces = request.form['auto_pieces']
     defense = 'defense' in request.form
+    auto_start_position = request.form['auto_start_position']
+    auto_successful = request.form['auto_successful'] == 'true'
+    auto_target_pieces = request.form['auto_target_pieces']
+    endgame = request.form['endgame']
+    driver_ability = request.form['driver_ability']
 
-    # Combine match_type and match_number to create match_id
     match_id = f"{match_type}{match_number}"
 
-    # Create a new Matches entry
     match = Matches(
         team_id=team_id,
         event_id=event_id,
         match_id=match_id,
         teleop_pieces=teleop_pieces,
         auto_pieces=auto_pieces,
-        defense=defense
+        defense=defense,
+        auto_start_position=auto_start_position,
+        auto_successful=auto_successful,
+        auto_target_pieces=auto_target_pieces,
+        endgame=endgame,
+        driver_ability=driver_ability
     )
 
     db.session.add(match)
@@ -96,19 +107,36 @@ def view_event(event_id):
     event_teams = EventTeams.query.filter_by(event_id=event_id).all()
 
     team_ids = [et.team_id for et in event_teams]
-
     teams = Teams.query.filter(Teams.team_id.in_(team_ids)).all()
 
-    matches = Matches.query.filter_by(event_id=event_id).all()
+    team_stats = []
+    for team in teams:
+        matches = Matches.query.filter_by(event_id=event_id, team_id=team.team_id).all()
+        average_auto_points = calculate_average_auto_points(matches)
+        average_teleop_points = calculate_average_teleop_points(matches)
+        team_stats.append({
+            'team': team,
+            'average_auto_points': average_auto_points,
+            'average_teleop_points': average_teleop_points
+        })
 
-    return render_template('view/events/event.html', event=event, teams=teams, matches=matches)
+    return render_template('view/events/event.html', event=event, team_stats=team_stats)
 
 
 @app.route('/view/events/<event_id>/<team_id>')
 def view_event_team(event_id, team_id):
     matches = Matches.query.filter_by(event_id=event_id, team_id=team_id).all()
-
-    return render_template('view/events/team.html', matches=matches)
+    team = Teams.query.filter_by(team_id=team_id).first()
+    event = Events.query.filter_by(event_id=event_id).first()
+    preferred_auto_start_position = find_preferred_starting_position(matches)
+    average_auto_points = calculate_average_auto_points(matches)
+    average_teleop_points = calculate_average_teleop_points(matches)
+    return render_template(
+        'view/events/team.html',
+        matches=matches, team=team, event=event,
+        preferred_auto_start_position=preferred_auto_start_position,
+        average_auto_points=average_auto_points,
+        average_teleop_points=average_teleop_points)
 
 
 @app.route('/view/matches')
@@ -158,6 +186,41 @@ def delete_event(event_id):
     db.session.commit()
 
     return jsonify({"success": True})
+
+
+def find_preferred_starting_position(matches):
+    if not matches:
+        return 0
+
+    position_count = {}
+
+    for match in matches:
+        position = match.auto_start_position
+        if position in position_count:
+            position_count[position] += 1
+        else:
+            position_count[position] = 1
+
+    preferred_position = max(position_count, key=position_count.get)
+    return preferred_position
+
+
+def calculate_average_auto_points(matches):
+    if not matches:
+        return 0
+
+    total_auto_points = sum(match.auto_pieces for match in matches)
+    average_auto_points = total_auto_points / len(matches) if matches else 0
+    return average_auto_points
+
+
+def calculate_average_teleop_points(matches):
+    if not matches:
+        return 0
+
+    total_teleop_points = sum(match.teleop_pieces for match in matches)
+    average_teleop_points = total_teleop_points / len(matches) if matches else 0
+    return average_teleop_points
 
 
 with app.app_context():
