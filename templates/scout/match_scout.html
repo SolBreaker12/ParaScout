@@ -8,12 +8,10 @@
 </head>
 <body>
 <header>
-    <h1>ParaScout</h1>
+    <h1>Match Scouting</h1>
 </header>
 <div class="container">
-    <h2>Match Scouting</h2>
     <form class="scout-form" action="{{ url_for('submit_match_data') }}" method="POST">
-        <!-- Existing fields -->
         <div class="form-group">
             <label for="match-id">Match Number:</label>
             <div class="match-number-container">
@@ -41,24 +39,20 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="teleop_pieces">Teleop Pieces:</label>
-            <input type="number" id="teleop_pieces" name="teleop_pieces" required>
-        </div>
-        <div class="form-group">
-            <label for="auto_pieces">Auto Pieces:</label>
-            <input type="number" id="auto_pieces" name="auto_pieces" required>
-        </div>
-        <div class="form-group">
-            <label for="defense">Defense:</label>
-            <input type="checkbox" id="defense" name="defense">
-        </div>
-        <div class="form-group">
             <label for="auto_start_position">Auto Start Position:</label>
             <select id="auto_start_position" name="auto_start_position" required>
                 <option value="Source">Source Side</option>
                 <option value="Speaker">Speaker</option>
                 <option value="Amp">Amp Side</option>
             </select>
+        </div>
+        <div class="form-group">
+            <label for="auto_target_pieces">Auto Target Pieces:</label>
+            <input type="number" id="auto_target_pieces" name="auto_target_pieces" required>
+        </div>
+        <div class="form-group">
+            <label for="auto_pieces">Auto Pieces:</label>
+            <input type="number" id="auto_pieces" name="auto_pieces" required>
         </div>
         <div class="form-group">
             <label for="auto_successful">Auto Successful:</label>
@@ -68,8 +62,12 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="auto_target_pieces">Auto Target Pieces:</label>
-            <input type="number" id="auto_target_pieces" name="auto_target_pieces" required>
+            <label for="teleop_pieces">Teleop Pieces:</label>
+            <input type="number" id="teleop_pieces" name="teleop_pieces" required>
+        </div>
+        <div class="form-group">
+            <label for="defense">Defense:</label>
+            <input type="checkbox" id="defense" name="defense">
         </div>
         <div class="form-group">
             <label for="endgame">Endgame:</label>
@@ -84,7 +82,7 @@
             <label for="driver_ability">Driver Ability (1-10):</label>
             <input type="number" id="driver_ability" name="driver_ability" min="1" max="10" required>
         </div>
-            <button class="buttons button" type="submit">Submit</button>
+        <button class="buttons button" type="submit">Submit</button>
     </form>
 </div>
 <footer>
