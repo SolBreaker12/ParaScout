@@ -11,43 +11,58 @@
 </header>
 <div class="container">
     <div class="info-container">
-        <div class="info-left">
-            <p>Preferred Auto Starting Position: {{ preferred_auto_start_position }}</p>
-            <p>Average Teleop Points: {{ average_teleop_points }}</p>
-            <p>Average Auto Points: {{ average_auto_points }}</p>
+        <div class="info-box">
+            <div class="info-left">
+                <p>Preferred Auto Starting Position: {{ preferred_auto_start_position }}</p>
+                <p>Average Teleop Pieces: {{ average_teleop_points }}</p>
+                <p>Average Auto Pieces: {{ average_auto_points }}</p>
+            </div>
         </div>
-        <div class="info-right">
-            <!-- Placeholder for other information -->
-            <p>Other Info: TBD</p>
+        <div class="info-box">
+            <div class="info-right">
+                <p>Drivetrain Type: {{ pit_scouting.drivetrain_type }}</p>
+                <p>Defense Capability: {{ pit_scouting.defense_capability }}</p>
+                <p>Anti-Defense Capability: {{ pit_scouting.anti_defense_capability }}</p>
+                <p>Number of Autos: {{ pit_scouting.number_of_autos }}</p>
+                <p>Auto Consistency: {{ pit_scouting.auto_consistency }}</p>
+                <p>Average Cycle Time: {{ pit_scouting.average_cycle_time }}</p>
+                <p>Endgame Ability: {{ pit_scouting.endgame_ability }}</p>
+            </div>
         </div>
     </div>
     <h2>Matches</h2>
     <table class="sortable">
         <thead>
-        <tr>
-            <th>Match ID</th>
-            <th>Auto Pieces</th>
-            <th>Teleop Pieces</th>
-            <th>Defense</th>
-            <th>Auto Start Position</th>
-            <th>Auto Successful</th>
-            <th>Auto Target Pieces</th>
-            <th>Endgame</th>
-            <th>Driver Ability</th>
+        <tr class="text-large">
+            <th colspan="2">Match</th>
+            <th colspan="2">Score</th>
+            <th colspan="3">Auto</th>
+            <th colspan="2">Teleop</th>
+        </tr>
+        <tr class="table-header-default">
+            <th data-label="Match ID">Match ID</th>
+            <th data-label="Auto Pieces">Auto Pieces</th>
+            <th data-label="Teleop Pieces">Teleop Pieces</th>
+            <th data-label="Defense">Defense</th>
+            <th data-label="Auto Start Position">Auto Start Position</th>
+            <th data-label="Auto Successful">Auto Successful</th>
+            <th data-label="Auto Target Pieces">Auto Target Pieces</th>
+            <th data-label="Endgame">Endgame</th>
+            <th data-label="Driver Ability">Driver Ability</th>
         </tr>
         </thead>
         <tbody>
         {% for match in matches %}
             <tr>
-                <td>{{ match.match_id }}</td>
-                <td>{{ match.auto_pieces }}</td>
-                <td>{{ match.teleop_pieces }}</td>
-                <td>{{ 'Yes' if match.defense else 'No' }}</td>
-                <td>{{ match.auto_start_position }}</td>
-                <td>{{ match.auto_target_pieces }}</td>
-                <td>{{ 'Yes' if match.auto_successful else 'No' }}</td>
-                <td>{{ match.endgame }}</td>
-                <td>{{ match.driver_ability }}</td>
+                <td data-label="Match ID">{{ match.match_id }}</td>
+                <td data-label="Auto Pieces">{{ match.auto_pieces }}</td>
+                <td data-label="Teleop Pieces">{{ match.teleop_pieces }}</td>
+                <td data-label="Defense">{{ 'Yes' if match.defense else 'No' }}</td>
+                <td data-label="Auto Start Position">{{ match.auto_start_position }}</td>
+                <td data-label="Auto Target Pieces">{{ match.auto_target_pieces }}</td>
+                <td data-label="Auto Successful">{{ 'Yes' if match.auto_successful else 'No' }}</td>
+                <td data-label="Endgame">{{ match.endgame }}</td>
+                <td data-label="Driver Ability">{{ match.driver_ability }}</td>
             </tr>
         {% endfor %}
         </tbody>

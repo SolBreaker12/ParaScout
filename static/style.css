@@ -54,6 +54,7 @@ table {
     border-collapse: collapse;
     margin-top: 20px;
     background-color: #333333;
+    border: 5px solid black;
 }
 
 th, td {
@@ -88,12 +89,12 @@ tr:nth-child(even) {
 }
 
 input[type='checkbox'] {
-    -webkit-appearance:none;
-    width:30px;
-    height:30px;
-    background:#000000;
-    border-radius:5px;
-    border:2px solid #555;
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    background: #000000;
+    border-radius: 5px;
+    border: 2px solid #555;
 }
 
 input[type='checkbox']:checked {
@@ -199,6 +200,67 @@ footer {
     #teamList {
         justify-content: space-between;
     }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th, td {
+        display: block;
+        text-align: right;
+        padding: 10px;
+        font-size: 1em;
+    }
+
+    th::before, td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
+
+    th, td {
+        border: none;
+        border-bottom: 1px solid #ffff00;
+    }
+
+    tr {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    tr:nth-child(even) {
+        background-color: transparent;
+    }
+
+    table.sortable,
+    table.sortable tbody,
+    table.sortable tr,
+    table.sortable td {
+        display: block;
+        width: 100%;
+    }
+
+    table.sortable tr {
+        margin-bottom: 15px;
+    }
+
+    table.sortable td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    table.sortable td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-weight: bold;
+        text-align: left;
+    }
 }
 
 .delete-button {
@@ -303,16 +365,42 @@ footer {
     background-color: #4a4a4a;
 }
 
-.info-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
 .info-left, .info-right {
-    width: 48%;
+    width: 100%;
 }
 
 .info-left p, .info-right p {
     margin: 5px 0;
+}
+
+.text-large {
+    font-size: 1.25em;
+}
+
+.info-box {
+    display: flex;
+    border: 1px solid #ffff00;
+    padding: 10px;
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    flex: 1;
+    margin-right: 10px;
+    max-width: 48%;
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.info-box:last-child {
+    margin-right: 0;
+}
+
+.flash-message {
+    color: red;
+    text-align: center;
+    margin-bottom: 20px;
 }

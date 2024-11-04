@@ -3,13 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>Pit Scouting</title>
-    <link rel="stylesheet" href="../../static/style.css">
+    <link rel="stylesheet" href="../../../static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <header>
-    <h1>ParaScout</h1>
+    <h1>Pit Scouting</h1>
 </header>
-    <p>scout a pit here</p>
-    <a href="/">home</a>
+<div class="container">
+    <form class="scout-form" action="/submit_pit_scout" method="post">
+        <div class="form-group">
+            <label for="team_id">Team Number:</label>
+            <input type="number" id="team_id" name="team_id" required>
+        </div>
+        <div class="form-group">
+            <label for="event_id">Event:</label>
+            <select id="event_id" name="event_id" required>
+                {% for event in events %}
+                <option value="{{ event.event_id }}">{{ event.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="drivetrain_type">Drivetrain Type:</label>
+            <select id="drivetrain_type" name="drivetrain_type" required>
+                <option value="Swerve">Swerve</option>
+                <option value="Mecanum">Mecanum</option>
+                <option value="Tank">Tank</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="defense_capability">Defense Capability:</label>
+            <select id="defense_capability" name="defense_capability" required>
+                <option value="Good">Good</option>
+                <option value="Mid">Mid</option>
+                <option value="Bad">Bad</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="anti_defense_capability">Anti-Defense Capability:</label>
+            <select id="anti_defense_capability" name="anti_defense_capability" required>
+                <option value="Good">Good</option>
+                <option value="Mid">Mid</option>
+                <option value="Bad">Bad</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="number_of_autos">Number of Autos:</label>
+            <input type="number" id="number_of_autos" name="number_of_autos" required>
+        </div>
+        <div class="form-group">
+            <label for="auto_consistency">Auto Consistency:</label>
+            <select id="auto_consistency" name="auto_consistency" required>
+                <option value="Consistent">Consistent</option>
+                <option value="Mid">Mid</option>
+                <option value="Not Consistent">Not Consistent</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="average_cycle_time">Average Cycle Time:</label>
+            <input type="number" id="average_cycle_time" name="average_cycle_time" required>
+        </div>
+        <div class="form-group">
+            <label for="endgame_ability">Endgame Ability:</label>
+            <select id="endgame_ability" name="endgame_ability" required>
+                <option value="Park">Park</option>
+                <option value="Hang">Hang</option>
+                <option value="Trap">Trap</option>
+            </select>
+        </div>
+        <button class="buttons button" type="submit">Submit</button>
+    </form>
+</div>
+<footer>
+    <p>© 2024 FRC Team 9609 Paraducks</p>
+</footer>
 </body>
 </html>

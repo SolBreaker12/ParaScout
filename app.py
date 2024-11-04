@@ -1,10 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from functools import wraps
 import TBA
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scouting_data.db'
 db = SQLAlchemy(app)
+
+app.secret_key = 'your_secret_key'
 
 
 class Teams(db.Model):
@@ -36,6 +39,29 @@ class Matches(db.Model):
     auto_target_pieces = db.Column(db.Integer, nullable=False)  # New field
     endgame = db.Column(db.String, nullable=False)  # New field
     driver_ability = db.Column(db.Integer, nullable=False)  # New field
+
+
+class PitScouting(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    team_id = db.Column(db.Integer, db.ForeignKey('teams.team_id'), nullable=False)
+    event_id = db.Column(db.String, db.ForeignKey('events.event_id'), nullable=False)
+    drivetrain_type = db.Column(db.String(50), nullable=False)
+    defense_capability = db.Column(db.String(50), nullable=False)
+    anti_defense_capability = db.Column(db.String(50), nullable=False)
+    number_of_autos = db.Column(db.Integer, nullable=False)
+    auto_consistency = db.Column(db.String(50), nullable=False)
+    average_cycle_time = db.Column(db.Integer, nullable=False)
+    endgame_ability = db.Column(db.String(50), nullable=False)
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'logged_in' not in session:
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 @app.route('/')
@@ -87,7 +113,38 @@ def submit_match_data():
 
 @app.route('/scout/pit')
 def scout_pit():
-    return render_template('scout/pit_scout.html')
+    events = Events.query.all()
+    return render_template('scout/pit_scout.html', events=events)
+
+
+@app.route('/submit_pit_scout', methods=['POST'])
+def submit_pit_scout():
+    team_id = request.form['team_id']
+    event_id = request.form['event_id']
+    drivetrain_type = request.form['drivetrain_type']
+    defense_capability = request.form['defense_capability']
+    anti_defense_capability = request.form['anti_defense_capability']
+    number_of_autos = request.form['number_of_autos']
+    auto_consistency = request.form['auto_consistency']
+    average_cycle_time = request.form['average_cycle_time']
+    endgame_ability = request.form['endgame_ability']
+
+    new_pit_scout = PitScouting(
+        team_id=team_id,
+        event_id=event_id,
+        drivetrain_type=drivetrain_type,
+        defense_capability=defense_capability,
+        anti_defense_capability=anti_defense_capability,
+        number_of_autos=number_of_autos,
+        auto_consistency=auto_consistency,
+        average_cycle_time=average_cycle_time,
+        endgame_ability=endgame_ability
+    )
+
+    db.session.add(new_pit_scout)
+    db.session.commit()
+
+    return redirect(url_for('success'))
 
 
 @app.route('/scout/success')
@@ -131,12 +188,17 @@ def view_event_team(event_id, team_id):
     preferred_auto_start_position = find_preferred_starting_position(matches)
     average_auto_points = calculate_average_auto_points(matches)
     average_teleop_points = calculate_average_teleop_points(matches)
+
+    pit_scouting = PitScouting.query.filter_by(event_id=event_id, team_id=team_id).first()
+
     return render_template(
         'view/events/team.html',
         matches=matches, team=team, event=event,
         preferred_auto_start_position=preferred_auto_start_position,
         average_auto_points=average_auto_points,
-        average_teleop_points=average_teleop_points)
+        average_teleop_points=average_teleop_points,
+        pit_scouting=PitScouting.query.filter_by(event_id=event_id, team_id=team_id).first()
+    )
 
 
 @app.route('/view/matches')
@@ -145,13 +207,27 @@ def view_matches():
     return render_template('view/matches.html', matches=matches)
 
 
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        password = request.form['password']
+        if password == 'your_admin_password':
+            session['logged_in'] = True
+            return redirect(url_for('admin'))
+        else:
+            flash('Incorrect password. Please try again.')
+    return render_template('admin_login.html')
+
+
 @app.route('/admin')
+@login_required
 def admin():
     events = Events.query.all()
     return render_template('admin.html', events=events)
 
 
 @app.route('/admin/add_event', methods=['POST'])
+@login_required
 def add_event():
     event_name = request.form['event_name']
     event_id = request.form['event_id']
@@ -176,6 +252,7 @@ def add_event():
 
 
 @app.route('/admin/delete_event/<string:event_id>', methods=['POST'])
+@login_required
 def delete_event(event_id):
     event = Events.query.get_or_404(event_id)
 
