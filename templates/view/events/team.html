@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>{{ team.name }} - Matches</title>
     <link rel="stylesheet" href="../../../static/style.css">
+    <script src="../../../static/sorttable.js"></script>
 </head>
 <body>
 <header>
@@ -34,20 +35,20 @@
     <table class="sortable">
         <thead>
         <tr class="text-large">
-            <th colspan="2">Match</th>
+            <th colspan="1">Match</th>
             <th colspan="2">Score</th>
             <th colspan="3">Auto</th>
-            <th colspan="2">Teleop</th>
+            <th colspan="3">Teleop</th>
         </tr>
         <tr class="table-header-default">
             <th data-label="Match ID">Match ID</th>
             <th data-label="Auto Pieces">Auto Pieces</th>
             <th data-label="Teleop Pieces">Teleop Pieces</th>
-            <th data-label="Defense">Defense</th>
             <th data-label="Auto Start Position">Auto Start Position</th>
             <th data-label="Auto Successful">Auto Successful</th>
             <th data-label="Auto Target Pieces">Auto Target Pieces</th>
             <th data-label="Endgame">Endgame</th>
+            <th data-label="Defense">Defense</th>
             <th data-label="Driver Ability">Driver Ability</th>
         </tr>
         </thead>
@@ -57,11 +58,11 @@
                 <td data-label="Match ID">{{ match.match_id }}</td>
                 <td data-label="Auto Pieces">{{ match.auto_pieces }}</td>
                 <td data-label="Teleop Pieces">{{ match.teleop_pieces }}</td>
-                <td data-label="Defense">{{ 'Yes' if match.defense else 'No' }}</td>
                 <td data-label="Auto Start Position">{{ match.auto_start_position }}</td>
-                <td data-label="Auto Target Pieces">{{ match.auto_target_pieces }}</td>
                 <td data-label="Auto Successful">{{ 'Yes' if match.auto_successful else 'No' }}</td>
+                <td data-label="Auto Target Pieces">{{ match.auto_target_pieces }}</td>
                 <td data-label="Endgame">{{ match.endgame }}</td>
+                <td data-label="Defense">{{ 'Yes' if match.defense else 'No' }}</td>
                 <td data-label="Driver Ability">{{ match.driver_ability }}</td>
             </tr>
         {% endfor %}
