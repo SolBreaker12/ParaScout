@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="../../static/style.css">
+</head>
+<body>
+<header>
+    <h1>Admin Login</h1>
+</header>
+<div class="container">
+    {% if error_message %}
+        <div class="error-message">{{ error_message }}</div>
+    {% endif %}
+    <form class="scout-form" action="/admin/login" method="post">
+        <div class="form-group" style="margin-top: 10px">
+            <label for="password" class="t-center"style="font-size: 2em">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button class="buttons button" type="submit">Login</button>
+    </form>
+</div>
+<footer>
+    <p>© 2024 FRC Team 9609 Paraducks</p>
+</footer>
+</body>
+</html>

@@ -35,10 +35,10 @@ class Matches(db.Model):
     teleop_pieces = db.Column(db.Integer, nullable=False)
     defense = db.Column(db.Boolean, nullable=False)
     auto_start_position = db.Column(db.String, nullable=False)
-    auto_successful = db.Column(db.Boolean, nullable=False)  # Renamed field
-    auto_target_pieces = db.Column(db.Integer, nullable=False)  # New field
-    endgame = db.Column(db.String, nullable=False)  # New field
-    driver_ability = db.Column(db.Integer, nullable=False)  # New field
+    auto_successful = db.Column(db.Boolean, nullable=False)
+    auto_target_pieces = db.Column(db.Integer, nullable=False)
+    endgame = db.Column(db.String, nullable=False)
+    driver_ability = db.Column(db.Integer, nullable=False)
 
 
 class PitScouting(db.Model):
@@ -60,7 +60,6 @@ def login_required(f):
         if 'logged_in' not in session:
             return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
-
     return decorated_function
 
 
@@ -209,14 +208,15 @@ def view_matches():
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
+    error_message = None
     if request.method == 'POST':
         password = request.form['password']
-        if password == 'your_admin_password':
+        if password == app.secret_key:  # Ensure this matches the correct admin password
             session['logged_in'] = True
             return redirect(url_for('admin'))
         else:
-            flash('Incorrect password. Please try again.')
-    return render_template('admin_login.html')
+            error_message = 'Incorrect password. Please try again.'
+    return render_template('admin_login.html', error_message=error_message)
 
 
 @app.route('/admin')
@@ -236,6 +236,7 @@ def add_event():
     db.session.commit()
 
     teams = TBA.request_event_teams(event_id)
+
     for team in teams:
         team_id = team["team_number"]
         existing_team = Teams.query.filter_by(team_id=team_id).first()
