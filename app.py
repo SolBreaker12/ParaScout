@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scouting_data.db'
 db = SQLAlchemy(app)
 
-app.secret_key = 'your_secret_key'
+app.secret_key = 'admin_pass'  # Not a high-security app so no problem
 
 
 class Teams(db.Model):
@@ -60,6 +60,7 @@ def login_required(f):
         if 'logged_in' not in session:
             return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
+
     return decorated_function
 
 
@@ -159,12 +160,15 @@ def view_events():
 
 @app.route('/view/events/<event_id>')
 def view_event(event_id):
+    # Get the event row that matches URL event_id
     event = Events.query.filter_by(event_id=event_id).one()
+    # Get all teams at same event
     event_teams = EventTeams.query.filter_by(event_id=event_id).all()
-
+    # Separate all team_ids and get all teams with the same id
     team_ids = [et.team_id for et in event_teams]
     teams = Teams.query.filter(Teams.team_id.in_(team_ids)).all()
 
+    # Calculate average auto and teleop points for each team using helper functions
     team_stats = []
     for team in teams:
         matches = Matches.query.filter_by(event_id=event_id, team_id=team.team_id).all()
@@ -175,7 +179,7 @@ def view_event(event_id):
             'average_auto_points': average_auto_points,
             'average_teleop_points': average_teleop_points
         })
-
+    # Render the event page with the event and team stats
     return render_template('view/events/event.html', event=event, team_stats=team_stats)
 
 
@@ -286,12 +290,14 @@ def find_preferred_starting_position(matches):
 def calculate_average_auto_points(matches):
     if not matches:
         return 0
-
+    # Sum of all pieces
     total_auto_points = sum(match.auto_pieces for match in matches)
+    # Average of all pieces
     average_auto_points = total_auto_points / len(matches) if matches else 0
     return average_auto_points
 
 
+# Same as previous, just for teleop pieces
 def calculate_average_teleop_points(matches):
     if not matches:
         return 0
