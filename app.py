@@ -57,8 +57,11 @@ class PitScouting(db.Model):
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        # Check if user is logged in
         if 'logged_in' not in session:
+            # If not, redirect to login page
             return redirect(url_for('admin_login'))
+        # Else, call the original function
         return f(*args, **kwargs)
 
     return decorated_function
@@ -213,9 +216,11 @@ def view_matches():
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     error_message = None
+
+    # If user has submitted a password
     if request.method == 'POST':
         password = request.form['password']
-        if password == app.secret_key:  # Ensure this matches the correct admin password
+        if password == app.secret_key:
             session['logged_in'] = True
             return redirect(url_for('admin'))
         else:
@@ -233,31 +238,35 @@ def admin():
 @app.route('/admin/add_event', methods=['POST'])
 @login_required
 def add_event():
+    # New event
     event_name = request.form['event_name']
     event_id = request.form['event_id']
     new_event = Events(event_id=event_id, name=event_name)
 
     try:
         teams = TBA.request_event_teams(event_id)
+        # If the API response is not valid, throw an error
         if not isinstance(teams, list):
             raise ValueError("Invalid response format from TBA.request_event_teams")
         if not teams:
             raise ValueError("Invalid event ID")
     except Exception as e:
+        # If there is an error, display the error and don't add the event to the database
         db.session.rollback()
         error_message = f"Failed to fetch teams for the event. Error: {str(e)}"
         return render_template('admin.html', events=Events.query.all(), error_message=error_message)
 
+    # If there is no error, add the event
     db.session.add(new_event)
     db.session.commit()
 
     for team in teams:
         if not isinstance(team, dict):
             raise ValueError("Invalid team data format")
-        team_id = team["team_number"]  # Ensure team is a dictionary and "team_number" is a valid key
+        team_id = team["team_number"]
         existing_team = Teams.query.filter_by(team_id=team_id).first()
         if not existing_team:
-            team_name = team["nickname"]  # Ensure "nickname" is a valid key
+            team_name = team["nickname"]
             new_team = Teams(team_id=team_id, name=team_name)
             db.session.add(new_team)
 
@@ -323,4 +332,5 @@ with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
+    session['logged_in'] = False
     app.run(debug=True)
