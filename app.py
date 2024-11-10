@@ -236,16 +236,28 @@ def add_event():
     event_name = request.form['event_name']
     event_id = request.form['event_id']
     new_event = Events(event_id=event_id, name=event_name)
+
+    try:
+        teams = TBA.request_event_teams(event_id)
+        if not isinstance(teams, list):
+            raise ValueError("Invalid response format from TBA.request_event_teams")
+        if not teams:
+            raise ValueError("Invalid event ID")
+    except Exception as e:
+        db.session.rollback()
+        error_message = f"Failed to fetch teams for the event. Error: {str(e)}"
+        return render_template('admin.html', events=Events.query.all(), error_message=error_message)
+
     db.session.add(new_event)
     db.session.commit()
 
-    teams = TBA.request_event_teams(event_id)
-
     for team in teams:
-        team_id = team["team_number"]
+        if not isinstance(team, dict):
+            raise ValueError("Invalid team data format")
+        team_id = team["team_number"]  # Ensure team is a dictionary and "team_number" is a valid key
         existing_team = Teams.query.filter_by(team_id=team_id).first()
         if not existing_team:
-            team_name = team["nickname"]
+            team_name = team["nickname"]  # Ensure "nickname" is a valid key
             new_team = Teams(team_id=team_id, name=team_name)
             db.session.add(new_team)
 

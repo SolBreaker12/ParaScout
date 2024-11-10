@@ -11,6 +11,9 @@
     <h1>ParaScout</h1>
 </header>
 <div class="container">
+    {% if error_message %}
+        <div class="error-message">{{ error_message }}</div>
+    {% endif %}
     <div class="add-event-section">
         <h2>Add Event</h2>
         <form class="scout-form" action="{{ url_for('add_event') }}" method="post">
