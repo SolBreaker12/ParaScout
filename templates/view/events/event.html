@@ -23,15 +23,17 @@
         </thead>
         <tbody>
         {% for stats in team_stats %}
-        <tr>
-            <td>{{ stats.team.team_id }}</td>
-            <td><a href="{{ event.event_id }}/{{ stats.team.team_id }}">{{ stats.team.name }}</a></td>
-            <td>{{ stats.average_auto_points }}</td>
-            <td>{{ stats.average_teleop_points }}</td>
-        </tr>
+            <tr>
+                <td>{{ stats.team.team_id }}</td>
+                <td><a href="{{ event.event_id }}/{{ stats.team.team_id }}">{{ stats.team.name }}</a></td>
+                <td>{{ stats.average_auto_points }}</td>
+                <td>{{ stats.average_teleop_points }}</td>
+            </tr>
         {% endfor %}
         </tbody>
     </table>
+    <br>
+    <a href="/view/events" class="button width-return">Return</a>
 </div>
 <footer>
     <p>© 2024 FRC Team 9609 Paraducks</p>
